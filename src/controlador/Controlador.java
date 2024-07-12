@@ -33,7 +33,7 @@ public class Controlador implements IControladorRemoto, Serializable {
     }
 
     public void inicio() throws RemoteException {
-
+        this.juego.iniciarJuego();
     }
 
 
@@ -51,6 +51,8 @@ public class Controlador implements IControladorRemoto, Serializable {
                 case JUGADOR_CONECTADO:
                     updateJugadorConectado();
                     break;
+                case START:
+                    vista.iniciarPartida();
             }
         }
     }

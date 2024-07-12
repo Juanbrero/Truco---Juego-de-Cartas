@@ -60,4 +60,16 @@ public class Juego extends ObservableRemoto implements IJuego {
         return nuevoJugador;
     }
 
+    public void iniciarJuego() throws RemoteException{
+
+        if(jugadoresConectados == cantidadJugadores) {
+            notificarObservadores(Evento.START);
+            mazo.mezclar();
+            jugarRonda();
+        }
+    }
+
+    private void jugarRonda() {
+    }
+
 }
