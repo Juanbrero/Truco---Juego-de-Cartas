@@ -16,7 +16,7 @@ public class VentanaPrincipal extends JFrame implements IVista {
 
     private Controlador controlador;
     private String nombre;
-    private JTextField nombreUsuario;
+    private JTextField nombreUsuario = new JTextField();
 
     public VentanaPrincipal(Controlador controlador) {
         this.controlador = controlador;
@@ -55,14 +55,27 @@ public class VentanaPrincipal extends JFrame implements IVista {
 
         crearPanelesGenerales();
 
-
-
-
     }
 
     @Override
     public void iniciar() {
         this.setVisible(true);
+    }
+
+    @Override
+    public void colaDeEspera(int jugadoresConectados, int cantidadJugadores) {
+
+        JDialog colaEspera = new JDialog(this);
+        colaEspera.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        colaEspera.setSize(260, 95);
+        colaEspera.setLocationRelativeTo(null);
+        colaEspera.setTitle("Cola de espera");
+        colaEspera.setLayout(new FlowLayout());
+        JPanel mensaje = new JPanel(new GridLayout());
+        mensaje.add(new JLabel("Esperando al resto de jugadores.. [" + jugadoresConectados + "/" + cantidadJugadores + "]"));
+        colaEspera.getContentPane().add(mensaje);
+
+        colaEspera.setVisible(true);
     }
 
     private void botonStartOnClick() {
