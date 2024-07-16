@@ -1,9 +1,11 @@
 package vista;
 
 import controlador.Controlador;
+import modelo.baraja.ICarta;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class VentanaPrincipal extends JFrame implements IVista {
 
@@ -18,6 +21,7 @@ public class VentanaPrincipal extends JFrame implements IVista {
     private String nombre;
     private JTextField nombreUsuario = new JTextField();
     private JDialog colaEspera;
+    private JPanel panelCartasMano;
 
     public VentanaPrincipal(Controlador controlador) {
         this.controlador = controlador;
@@ -59,9 +63,51 @@ public class VentanaPrincipal extends JFrame implements IVista {
             this.colaEspera.dispose();
         }
 
-//        this.setVisible(false);
         pantallaJuego();
-//        pantallaJuego = new VistaGrafica(jugador, this);
+
+    }
+
+    public void generarCartas(ArrayList<ICarta> cartas) throws RemoteException {
+
+        for (ICarta carta : cartas) {
+
+            JPanel vistaCarta = new JPanel(new FlowLayout());
+            vistaCarta.setPreferredSize(new Dimension(250,300));
+            vistaCarta.setBorder(new LineBorder(Color.BLACK));
+
+            String pathImg = "src/vista/img/cartas/" + carta.getNro() + carta.getPalo().toString() + ".jpg";
+
+            JPanel panelImg = new JPanel() {
+                private BufferedImage imagen;
+
+                {
+                    try {
+                        // Carga la imagen
+                        imagen = ImageIO.read(new File(pathImg));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (imagen != null) {
+                        // Dibuja la imagen como fondo
+                        g.drawImage(imagen, 0, 0, getWidth(), getHeight(), vistaCarta);
+                    }
+                }
+            };
+
+
+            panelImg.setLayout(new BorderLayout());
+
+            vistaCarta.add(panelImg);
+
+            panelCartasMano.add(vistaCarta);
+        }
+
+        this.repaint();
     }
 
     private void botonStartOnClick() {
@@ -74,11 +120,6 @@ public class VentanaPrincipal extends JFrame implements IVista {
 
         controlador.conectarse(nombre);
 
-        try {
-            controlador.inicio();
-        } catch (RemoteException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
     private void pantallaJuego() {
@@ -114,37 +155,88 @@ public class VentanaPrincipal extends JFrame implements IVista {
         panelBase.setLayout(new BorderLayout());
         panelBase.setOpaque(false);
 
-        JPanel panelCentro = new JPanel(new FlowLayout());
-        panelBase.add(panelCentro, BorderLayout.CENTER);
+        JPanel panelBase2 = new JPanel(new BorderLayout());
+        panelBase2.setOpaque(false);
+        panelBase.add(panelBase2, BorderLayout.CENTER);
+
+        JPanel panelNorte = new JPanel(new FlowLayout(FlowLayout.CENTER,0,30));
+        panelNorte.setPreferredSize(new Dimension(800,100));
+        panelNorte.setOpaque(false);
+        panelBase2.add(panelNorte, BorderLayout.NORTH);
+
+        JPanel panelCartasNorte = new JPanel(new GridLayout(1,3));
+        panelNorte.add(panelCartasNorte);
+
+        JPanel dorsoCarta = new JPanel(new FlowLayout());
+        dorsoCarta.setPreferredSize(new Dimension(150,80));
+        dorsoCarta.setBorder(new LineBorder(Color.BLACK));
+
+        String pathImgDorso = "src/vista/img/cartas/dorso.jpg";
+
+        JPanel panelImgDorso = new JPanel() {
+            private BufferedImage imagen;
+
+            {
+                try {
+                    // Carga la imagen
+                    imagen = ImageIO.read(new File(pathImgDorso));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (imagen != null) {
+                    // Dibuja la imagen como fondo
+                    g.drawImage(imagen, 0, 0, getWidth(), getHeight(), dorsoCarta);
+                }
+            }
+        };
+
+        panelImgDorso.setLayout(new BorderLayout());
+        dorsoCarta.add(panelImgDorso);
+        panelCartasNorte.add(dorsoCarta);
+        panelCartasNorte.add(dorsoCarta);
+        panelCartasNorte.add(dorsoCarta);
+
+
+        JPanel panelCentro = new JPanel(new FlowLayout(FlowLayout.CENTER,15,100));
+        panelBase2.add(panelCentro, BorderLayout.CENTER);
         panelCentro.setOpaque(false);
 
-        JPanel panelMesa = new JPanel(new GridLayout(2,1));
+        JPanel panelMesa = new JPanel(new FlowLayout());
         panelCentro.add(panelMesa);
         panelMesa.setOpaque(false);
+        panelMesa.setPreferredSize(new Dimension(1000,350));
 
-        JPanel panelCartasJugadas = new JPanel(new FlowLayout());
-        panelMesa.add(panelCartasJugadas);
-        panelCartasJugadas.setOpaque(false);
+//        JPanel panelCartasJugadas = new JPanel(new FlowLayout());
+//        panelMesa.add(panelCartasJugadas);
+//        panelCartasJugadas.setOpaque(false);
 
-        JPanel panelRondas = new JPanel(new GridLayout(1,3,15,0));
-        panelCartasJugadas.add(panelRondas);
+        JPanel panelRondas = new JPanel(new GridLayout(1,3,30,0));
+        panelMesa.add(panelRondas);
         panelRondas.setOpaque(false);
 
         JPanel ronda1 = new JPanel(new FlowLayout());
         panelRondas.add(ronda1);
-        ronda1.setOpaque(false);
+        ronda1.setPreferredSize(new Dimension(150,250));
+//        ronda1.setOpaque(false);
         JPanel ronda2 = new JPanel(new FlowLayout());
         panelRondas.add(ronda2);
-        ronda2.setOpaque(false);
+        ronda2.setPreferredSize(new Dimension(150,250));
+//        ronda2.setOpaque(false);
         JPanel ronda3 = new JPanel(new FlowLayout());
         panelRondas.add(ronda3);
-        ronda3.setOpaque(false);
+        ronda3.setPreferredSize(new Dimension(150,250));
+//        ronda3.setOpaque(false);
 
         JPanel panelMano = new JPanel(new FlowLayout());
-        panelMesa.add(panelMano);
+        panelBase2.add(panelMano, BorderLayout.SOUTH);
         panelMano.setOpaque(false);
 
-        JPanel panelCartasMano = new JPanel(new GridLayout(1,3,15,10));
+        panelCartasMano = new JPanel(new GridLayout(1,3,15,10));
         panelMano.add(panelCartasMano);
         panelCartasMano.setOpaque(false);
 
@@ -251,4 +343,5 @@ public class VentanaPrincipal extends JFrame implements IVista {
         panelBase.add(panelSur, BorderLayout.SOUTH);
 
     }
+
 }

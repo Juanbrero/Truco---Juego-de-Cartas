@@ -2,7 +2,8 @@ package modelo.baraja;
 
 import vista.VistaCarta;
 
-import java.io.Serializable;
+import java.rmi.RemoteException;
+
 
 public class Carta implements ICarta {
 
@@ -12,7 +13,6 @@ public class Carta implements ICarta {
     private boolean enMano;
     private boolean enMesa;
     private double valor;
-    private VistaCarta vistaCarta;
 
     public Carta(Palo palo, int nro) {
         this.palo = palo;
@@ -20,7 +20,6 @@ public class Carta implements ICarta {
         this.setEnMazo(false);
         this.setEnMano(false);
         this.setEnMesa(false);
-//        this.vistaCarta = new VistaCarta(nro, palo);
 
         // Asigno una escala de valores del menos significativo al mas significativo.
         switch (nro) {
@@ -93,6 +92,7 @@ public class Carta implements ICarta {
     public void setEnMazo(boolean enMazo) {
         this.enMazo = enMazo;
     }
+
 
     public boolean isEnMano() {
         return enMano;

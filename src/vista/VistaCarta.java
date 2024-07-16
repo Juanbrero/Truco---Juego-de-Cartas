@@ -10,7 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class VistaCarta extends JPanel {
+
+public class VistaCarta extends JPanel implements IVistaCarta {
 
     public VistaCarta(int nro, Palo palo) {
 
@@ -18,7 +19,7 @@ public class VistaCarta extends JPanel {
         this.setPreferredSize(new Dimension(100,150));
         this.setBorder(new LineBorder(Color.BLACK));
 
-        String pathImg = "src/vista/img/cartas/" + nro + palo.toString() + ".png";
+        String pathImg = "src/vista/img/cartas/" + nro + palo.toString() + ".jpg";
 
         JPanel panelImg = new JPanel() {
             private BufferedImage imagen;
