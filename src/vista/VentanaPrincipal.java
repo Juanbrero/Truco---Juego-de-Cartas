@@ -130,14 +130,17 @@ public class VentanaPrincipal extends JFrame implements IVista {
         // Paneles centrales donde van las cartas jugadas
         panelBase.add(panelMesa(), BorderLayout.CENTER);
 
+        // Paneles de parte inferior
         JPanel panelSur = new JPanel(new BorderLayout());
         panelSur.setOpaque(false);
         panelBase.add(panelSur, BorderLayout.SOUTH);
 
+        // Paneles de jugadas
         JPanel abc = new JPanel(new FlowLayout());
         abc.setPreferredSize(new Dimension(200, 100));
         abc.setOpaque(false);
         panelSur.add(abc, BorderLayout.WEST);
+
         // Paneles de cartas en mano
         panelSur.add(panelMano(),BorderLayout.CENTER);
 
@@ -414,43 +417,149 @@ public class VentanaPrincipal extends JFrame implements IVista {
     private JPanel panelPuntos() {
         JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
         panelDerecho.setOpaque(false);
-        panelDerecho.setPreferredSize(new Dimension(200,350));
+        panelDerecho.setPreferredSize(new Dimension(220,350));
 
-        JPanel panelTabla = new JPanel(new GridLayout(3,2,0,0));
-        panelTabla.setBorder(new LineBorder(Color.BLACK));
-        JLabel labelNos = new JLabel("Nos");
-        JLabel labelEllos = new JLabel("Ellos");
-        panelTabla.add(labelNos);
-        panelTabla.add(labelEllos);
+        JPanel panelTabla = new JPanel(new GridLayout(1,2,-2,0));
+        panelDerecho.add(panelTabla);
+        panelTabla.setOpaque(false);
 
-        JPanel panelMalasNos = new JPanel(new GridLayout(3,1,5,5));
-        panelTabla.add(panelMalasNos);
-
-        panelMalasNos.add(generarContadorPuntos());
-
-        JPanel panelMalasEllos = new JPanel(new GridLayout(3,1,5,5));
-        panelTabla.add(panelMalasEllos);
-
-        JPanel panelBuenasNos = new JPanel(new GridLayout(3,1,5,5));
-        panelTabla.add(panelBuenasNos);
-
-        JPanel panelBuenasEllos = new JPanel(new GridLayout(3,1,5,5));
-        panelTabla.add(panelBuenasEllos);
-
-        for (int i = 0; i < 3; i++) {
-            panelMalasNos.add(generarContadorPuntos());
-            panelMalasEllos.add(generarContadorPuntos());
-            panelBuenasNos.add(generarContadorPuntos());
-            panelBuenasEllos.add(generarContadorPuntos());
-        }
+        panelTabla.add(panelEquiposTablaPuntos("Nos"));
+        panelTabla.add(panelEquiposTablaPuntos("Ellos"));
 
         return panelDerecho;
     }
 
+    private JPanel panelEquiposTablaPuntos(String equipo) {
+
+        JPanel panelEquipoBase = new JPanel(new BorderLayout(0,-2));
+        panelEquipoBase.setOpaque(false);
+
+        JPanel panelEquipo = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelEquipo.setPreferredSize(new Dimension(110,50));
+        panelEquipo.setOpaque(false);
+        panelEquipo.setBorder(new LineBorder(Color.BLACK, 3));
+
+        JLabel labelEquipo = new JLabel(equipo);
+        labelEquipo.setFont(new Font("Arial", Font.BOLD, 30));
+        labelEquipo.setForeground(Color.BLACK);
+        panelEquipo.add(labelEquipo);
+
+        panelEquipoBase.add(panelEquipo, BorderLayout.NORTH);
+
+        // Panel malas
+        panelEquipoBase.add(panel15PuntosEquipo(), BorderLayout.CENTER);
+        // Panel buenas
+        panelEquipoBase.add(panel15PuntosEquipo(), BorderLayout.SOUTH);
+
+        return panelEquipoBase;
+    }
+
+    private JPanel panel15PuntosEquipo() {
+
+        JPanel panelBase = new JPanel(new FlowLayout(FlowLayout.CENTER,0,2));
+        panelBase.setOpaque(false);
+        panelBase.setPreferredSize(new Dimension(110,150));
+        panelBase.setBorder(new LineBorder(Color.BLACK, 3));
+
+        JPanel panel15Puntos = new JPanel(new GridLayout(3,1,0,0));
+        panel15Puntos.setOpaque(false);
+
+        for (int i = 0; i < 3; i++) {
+            panel15Puntos.add(generarContadorPuntos());
+        }
+
+        panelBase.add(panel15Puntos);
+
+        return panelBase;
+    }
+
     private JPanel generarContadorPuntos() {
 
-        JPanel puntos = new JPanel(new BorderLayout());
+        JPanel panelCasillaPuntos = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
+        panelCasillaPuntos.setOpaque(false);
+        panelCasillaPuntos.setPreferredSize(new Dimension(110,50));
 
-        return puntos;
+        JPanel puntos = new JPanel(new GridLayout(1,3,-15,0));
+        puntos.setOpaque(false);
+        panelCasillaPuntos.add(puntos);
+
+        JPanel panelIzquierdo = new JPanel(new FlowLayout(FlowLayout.RIGHT,-2,2));
+        panelIzquierdo.setOpaque(false);
+        panelIzquierdo.setPreferredSize(new Dimension(35,50));
+        puntos.add(panelIzquierdo);
+        panelIzquierdo.add(pintarPuntos(OrientacionPunto.VERTICAL));
+
+        JPanel panelCentro = new JPanel(new FlowLayout(FlowLayout.CENTER,0,-15));
+        panelCentro.setPreferredSize(new Dimension(40,40));
+        panelCentro.setOpaque(false);
+        puntos.add(panelCentro);
+
+        JPanel panelPuntosCentrales = new JPanel(new GridLayout(3,1,0,-15));
+        panelPuntosCentrales.setOpaque(false);
+        panelPuntosCentrales.add(pintarPuntos(OrientacionPunto.HORIZONTAL));
+        panelPuntosCentrales.add(pintarPuntos(OrientacionPunto.DIAGONAL));
+        panelPuntosCentrales.add(pintarPuntos(OrientacionPunto.HORIZONTAL));
+        panelCentro.add(panelPuntosCentrales);
+
+        JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.LEFT,-3,2));
+        panelDerecho.setPreferredSize(new Dimension(35,50));
+        puntos.add(panelDerecho);
+        panelDerecho.add(pintarPuntos(OrientacionPunto.VERTICAL));
+        panelDerecho.setOpaque(false);
+
+        return panelCasillaPuntos;
+    }
+
+    private JPanel pintarPuntos(OrientacionPunto orientacion) {
+        JPanel panelPunto = new JPanel(new FlowLayout());
+        panelPunto.setPreferredSize(new Dimension(35,30));
+        panelPunto.setOpaque(false);
+
+        String pathImgPunto = "src/vista/img/punto.png";
+
+        JPanel panelImgPunto = new JPanel() {
+            private BufferedImage imagen;
+
+            {
+                try {
+                    // Carga la imagen
+                    imagen = ImageIO.read(new File(pathImgPunto));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (imagen != null) {
+                    Graphics2D g2d = (Graphics2D) g;
+                    AffineTransform at = new AffineTransform();
+                    double scaleX = (double) getWidth() / imagen.getHeight();
+                    double scaleY = (double) getHeight() / imagen.getWidth();
+                    double scale = Math.min(scaleX, scaleY);
+                    at.translate(getWidth() / 2, getHeight() / 2);
+
+                    if (orientacion == OrientacionPunto.HORIZONTAL) {
+                        at.rotate(Math.toRadians(0));
+                    } else if (orientacion == OrientacionPunto.DIAGONAL) {
+                        at.rotate(Math.toRadians(-45));
+                    } else {
+                        at.rotate(Math.toRadians(90));
+                    }
+
+                    at.scale(scale, scale);
+                    at.translate(-imagen.getWidth() / 2, -imagen.getHeight() / 2);
+                    g2d.drawImage(imagen, at, null);
+
+                }
+            }
+        };
+        panelImgPunto.setPreferredSize(new Dimension(35,30));
+        panelImgPunto.setLayout(new BorderLayout());
+        panelImgPunto.setOpaque(false);
+        panelPunto.add(panelImgPunto);
+
+        return panelPunto;
     }
 }
